@@ -1,0 +1,32 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: testnet-casperhaproxy-tls
+spec:
+  entryPoints:
+    - secure
+  routes:
+    - match: Host(`rpc.testnet.casperholders.com`)
+      kind: Rule
+      services:
+        - name: testnet-casperhaproxy-service
+          port: 80
+  tls:
+    secretName: testnet-casperhaproxy-cert
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: testnet-casperhaproxy-http
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: Host(`rpc.testnet.casperholders.com`)
+      middlewares:
+        - name: https-only
+      kind: Rule
+      services:
+        - name: testnet-casperhaproxy-service
+          port: 80

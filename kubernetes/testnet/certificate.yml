@@ -1,0 +1,11 @@
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
+metadata:
+  name: testnet-casperhaproxy-cert
+spec:
+  secretName: testnet-casperhaproxy-cert
+  issuerRef:
+    name: letsencrypt-prod
+  commonName: rpc.testnet.casperholders.com
+  dnsNames:
+    - rpc.testnet.casperholders.com

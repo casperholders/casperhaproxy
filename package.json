@@ -1,0 +1,12 @@
+{
+  "name": "casper-haproxy",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "conf": "node index.js"
+  },
+  "dependencies": {
+    "axios": "^0.24.0",
+    "casper-js-sdk": "^1.4.3"
+  }
+}

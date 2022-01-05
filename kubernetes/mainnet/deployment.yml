@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: casperhaproxy
+  name: casperhaproxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: casperhaproxy
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: casperhaproxy
+        name: casperhaproxy
+    spec:
+      containers:
+        - name: casperhaproxy
+          image: killianh/casperhaproxy:mainnet
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8500
+          resources: { }
+      restartPolicy: Always

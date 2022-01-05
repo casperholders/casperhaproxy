@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: testnet-casperhaproxy
+  name: testnet-casperhaproxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: testnet-casperhaproxy
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: testnet-casperhaproxy
+        name: testnet-casperhaproxy
+    spec:
+      containers:
+        - name: testnet-casperhaproxy
+          image: killianh/casperhaproxy:testnet
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8500
+          resources: { }
+      restartPolicy: Always
