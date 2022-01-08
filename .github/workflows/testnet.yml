@@ -2,6 +2,7 @@ name: testnet
 
 on:
   push:
+    branches: [ develop ]
 
   workflow_dispatch:
 
@@ -27,7 +28,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          build-args: rpc=http://176.9.125.5:7777/rpc
+          build-args: rpc=http://95.216.44.9:7777/rpc
           tags: killianh/casperhaproxy:testnet
 
       - name: Production - Update deployment
