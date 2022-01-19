@@ -5,7 +5,7 @@ metadata:
     app: testnet-casperhaproxy
   name: testnet-casperhaproxy
 spec:
-  replicas: 1
+  replicas: 10
   selector:
     matchLabels:
       app: testnet-casperhaproxy
