@@ -24,8 +24,6 @@ spec:
     - web
   routes:
     - match: Host(`rpc.testnet.casperholders.com`)
-      middlewares:
-        - name: https-only
       kind: Rule
       services:
         - name: testnet-casperhaproxy-service
