@@ -62,7 +62,7 @@ async function peersStatus(rpc) {
     backends += '\tserver www' + (i + 1) + ' ' + addresses[i].replace(/:[0-9]*/g, ':7777') + ' maxconn 50 check inter 10s\n';
   }
 
-  const configFile = haproxyConf(addresses.length * 50, 8500, backends);
+  const configFile = haproxyConf(addresses.length * 50, 8500, backends, status.chainspec_name);
   console.log(configFile);
   fs.writeFile('haproxy.cfg', configFile, function (err) {
     if (err) throw err;
