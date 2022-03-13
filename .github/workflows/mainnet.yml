@@ -29,7 +29,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          build-args: rpc=http://78.46.37.169:7777/rpc
+          build-args: rpc=http://116.202.217.126:7777/rpc
           tags: killianh/casperhaproxy:mainnet
 
       - name: Production - Update deployment
