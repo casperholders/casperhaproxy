@@ -11,3 +11,40 @@ spec:
     app: testnet-casperhaproxy
 status:
   loadBalancer: { }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: testnet-caspernodemetrics-service
+    k8s-app: testnet-caspernodemetrics-service
+  annotations:
+    alpha.monitoring.coreos.com/non-namespaced: "true"
+  name: testnet-caspernodemetrics-service
+spec:
+  ports:
+    - name: nodemetrics
+      port: 8889
+      targetPort: 8889
+  selector:
+    app: testnet-casperhaproxy
+status:
+  loadBalancer: { }
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: testnet-caspernodemetrics
+  labels:
+    k8s-apps: http
+spec:
+  jobLabel: k8s-app
+  selector:
+    matchExpressions:
+      - {key: k8s-app, operator: Exists}
+  namespaceSelector:
+    matchNames:
+      - testnet-casperhaproxy
+  endpoints:
+    - port: nodemetrics
+      interval: 15s

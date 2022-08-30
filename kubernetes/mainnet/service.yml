@@ -11,3 +11,40 @@ spec:
     app: casperhaproxy
 status:
   loadBalancer: { }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: caspernodemetrics-service
+    k8s-app: caspernodemetrics-service
+  annotations:
+    alpha.monitoring.coreos.com/non-namespaced: "true"
+  name: caspernodemetrics-service
+spec:
+  ports:
+    - name: nodemetrics
+      port: 8888
+      targetPort: 8888
+  selector:
+    app: casperhaproxy
+status:
+  loadBalancer: { }
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: caspernodemetrics
+  labels:
+    k8s-apps: http
+spec:
+  jobLabel: k8s-app
+  selector:
+    matchExpressions:
+      - {key: k8s-app, operator: Exists}
+  namespaceSelector:
+    matchNames:
+      - casperhaproxy
+  endpoints:
+    - port: nodemetrics
+      interval: 15s
