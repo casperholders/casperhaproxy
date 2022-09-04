@@ -17,11 +17,11 @@ const wrapPromise = (promise, delay, reason) =>
 async function getStatus(address, apiVersion, chainspecName, height) {
   console.log(address);
   try {
-    const status = (await axios.get('http://' + address + '/status', { timeout: 300 })).data;
+    const status = (await axios.get('http://' + address + '/status', { timeout: 3000 })).data;
     if (status.api_version === apiVersion && status.chainspec_name === chainspecName && status.last_added_block_info.height >= height) {
       console.log('http://' + address.replace(/:[0-9]*/g, ':7777'));
       try {
-        const block = await wrapPromise(new CasperServiceByJsonRPC('http://' + address.replace(/:[0-9]*/g, ':7777') + '/rpc').getBlockInfoByHeight(height), 1000, { reason: 'timeout' });
+        const block = await wrapPromise(new CasperServiceByJsonRPC('http://' + address.replace(/:[0-9]*/g, ':7777') + '/rpc').getBlockInfoByHeight(height), 3000, { reason: 'timeout' });
         if (block.block.header.height === height) {
           console.log('good');
           addresses.push(address);
