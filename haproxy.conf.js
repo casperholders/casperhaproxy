@@ -8,8 +8,8 @@ defaults
 \toption\thttplog
 \toption\tdontlognull
 \ttimeout connect 5000
-\ttimeout client  50000
-\ttimeout server  50000
+\ttimeout client  20000
+\ttimeout server  20000
 
 frontend stats
 \tbind *:8404
