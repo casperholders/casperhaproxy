@@ -41,34 +41,45 @@ async function getStatus(address, apiVersion, chainspecName, height) {
 }
 
 async function peersStatus(rpc) {
-  const casperClient = new CasperServiceByJsonRPC(rpc);
-  const status = await casperClient.getStatus();
+  if(rpc === 'testnet') {
+    const backends = '\tserver www1 78.46.68.30:7777 maxconn 5000 check inter 10s\n';
+    const configFile = haproxyConf(5000, 8500, backends, 'casper-test');
+    console.log(configFile);
+    fs.writeFile('haproxy.cfg', configFile, function (err) {
+      if (err) throw err;
+      console.log('Saved!');
+      process.exit();
+    });
+  } else {
+    const casperClient = new CasperServiceByJsonRPC(rpc);
+    const status = await casperClient.getStatus();
 
-  const peers = (await casperClient.getPeers()).peers;
-  let arrayIp = [];
-  for (const peer of peers) {
-    arrayIp.push(peer.address.replace(/:[0-9]*/g, ':8888'));
+    const peers = (await casperClient.getPeers()).peers;
+    let arrayIp = [];
+    for (const peer of peers) {
+      arrayIp.push(peer.address.replace(/:[0-9]*/g, ':8888'));
+    }
+
+    arrayIp = [...new Set(arrayIp)];
+    console.log(arrayIp);
+    for (const ip of arrayIp) {
+      await getStatus(ip, status.api_version, status.chainspec_name, status.last_added_block_info.height);
+    }
+
+    let backends = '';
+
+    for (let i = 0; i < addresses.length; i++) {
+      backends += '\tserver www' + (i + 1) + ' ' + addresses[i].replace(/:[0-9]*/g, ':7777') + ' maxconn 20 check inter 10s\n';
+    }
+
+    const configFile = haproxyConf(addresses.length * 20, 8500, backends, status.chainspec_name);
+    console.log(configFile);
+    fs.writeFile('haproxy.cfg', configFile, function (err) {
+      if (err) throw err;
+      console.log('Saved!');
+      process.exit();
+    });
   }
-
-  arrayIp = [...new Set(arrayIp)];
-  console.log(arrayIp);
-  for (const ip of arrayIp) {
-    await getStatus(ip, status.api_version, status.chainspec_name, status.last_added_block_info.height);
-  }
-
-  let backends = '';
-
-  for (let i = 0; i < addresses.length; i++) {
-    backends += '\tserver www' + (i + 1) + ' ' + addresses[i].replace(/:[0-9]*/g, ':7777') + ' maxconn 20 check inter 10s\n';
-  }
-
-  const configFile = haproxyConf(addresses.length * 20, 8500, backends, status.chainspec_name);
-  console.log(configFile);
-  fs.writeFile('haproxy.cfg', configFile, function (err) {
-    if (err) throw err;
-    console.log('Saved!');
-    process.exit();
-  });
 }
 
 let addresses = [];
