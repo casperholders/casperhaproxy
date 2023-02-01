@@ -35,7 +35,8 @@ listen testnet_metrics
 listen www
 \tbind *:${port}
 \tbalance roundrobin
-\thttp-response set-header Access-Control-Allow-Origin "http://localhost:8080"
+\tcapture request header origin len 128
+\thttp-response set-header Access-Control-Allow-Origin %[capture.req.hdr(0)] if { capture.req.hdr(0) -m found }
 \thttp-response set-header Access-Control-Allow-Methods "GET, POST, OPTIONS"
 \thttp-response set-header Access-Control-Allow-Headers "Origin, X-Requested-With, Content-Type, Accept, Accept-Encoding"
 \toption httpchk
