@@ -5,7 +5,7 @@ metadata:
   name: casperhaproxy-tls
 spec:
   entryPoints:
-    - secure
+    - websecure
   routes:
     - match: Host(`rpc.casperholders.com`)
       kind: Rule
